@@ -1,0 +1,4 @@
+* About
+This project is a helper package to arrange tables for a wedding. You can read in a guest list from CSV, create groups of guests and assign those guests to a table.
+
+To get started, clone this repository and run ~python -m pip install -e .~ to install it.
