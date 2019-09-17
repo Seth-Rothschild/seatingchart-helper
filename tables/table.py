@@ -6,14 +6,16 @@ class Table:
         self._update_remaining()
 
     def add_group(self, group):
-        self.count += group.count
-        self.groupslist.append(group)
-        self._update_remaining()
+        if group.count <= self.remaining:
+            self.count += group.count
+            self.groupslist.append(group)
+            self._update_remaining()
 
     def remove_group(self, group):
-        self.groupslist.remove(group)
-        self.count -= group.count
-        self._update_remaining()
+        if group in self.groupslist:
+            self.groupslist.remove(group)
+            self.count -= group.count
+            self._update_remaining()
 
     def display(self):
         for group in self.groupslist:
