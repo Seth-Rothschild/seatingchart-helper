@@ -1,0 +1,8 @@
+#/bin/bash
+
+black tables
+black tests
+
+flake8
+
+pytest
