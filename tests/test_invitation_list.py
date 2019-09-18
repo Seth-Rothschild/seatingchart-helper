@@ -2,7 +2,7 @@ from tables.invitation_list import InvitationList
 
 
 def test_raw():
-    """When I initialize a grouplist
+    """When I initialize an invitation list
     It should have an attribute 'raw'
     """
     il = InvitationList()
