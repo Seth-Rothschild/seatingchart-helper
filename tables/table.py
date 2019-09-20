@@ -1,6 +1,7 @@
 class Table:
     def __init__(self, capacity=12):
         self.count = 0
+        self.name = ""
         self.groupslist = []
         self.capacity = capacity
         self._update_remaining()
@@ -24,3 +25,6 @@ class Table:
 
     def _update_remaining(self):
         self.remaining = self.capacity - self.count
+
+    def set_name(self, name):
+        self.name = name

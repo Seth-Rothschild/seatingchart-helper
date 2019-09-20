@@ -108,3 +108,13 @@ def test_invalid_remove(base_group):
     tab = Table()
     tab.remove_group(gr)
     assert tab.count == 0
+
+
+def test_table_name():
+    """When I create a table
+    It should have a name
+    """
+    tab = Table()
+    assert tab.name == ""
+    tab.set_name("table 1")
+    assert tab.name == "table 1"

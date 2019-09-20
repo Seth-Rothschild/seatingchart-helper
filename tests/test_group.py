@@ -37,3 +37,13 @@ def test_print_group(base_group, capsys):
     gr.display()
     captured = capsys.readouterr()
     assert "Steve and Eli" in captured.out
+
+
+def test_group_name():
+    """When I create a group
+    It should have a name
+    """
+    gr = Group()
+    assert gr.name == ""
+    gr.set_name("group 1")
+    assert gr.name == "group 1"
