@@ -16,16 +16,19 @@ def test_group_init():
     """
     assert Group().count == 0
     assert Group().names == []
+    assert Group().countlist == []
 
 
 def test_add_people():
     """When I add (name, count) with add_people
     It should increment the count
     It should add the name to self.names
+    It should add the count to countlist
     """
     gr = Group()
     gr.add_people(("Toby and Enrique", 2))
     assert gr.count == 2
+    assert gr.countlist[0] == 2
     assert "Toby and Enrique" in gr.names
 
 
