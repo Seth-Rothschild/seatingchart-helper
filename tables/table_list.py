@@ -9,9 +9,13 @@ class TableList:
         if csv_path != "":
             self.read_csv(csv_path)
 
-    def export(self):
-        for table in self.tables:
-            table.display()
+    def export(self, csv_path):
+        with open(csv_path, mode="w") as csvfile:
+            writeCSV = csv.writer(csvfile, delimiter=",")
+            for table in self.tables:
+                for group in table.groupslist:
+                    for name in group.names:
+                        writeCSV.writerow([name, group.count, group.name, table.name])
 
     def read_csv(self, csv_path):
         with open(csv_path) as csvfile:

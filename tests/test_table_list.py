@@ -33,15 +33,15 @@ def test_tables():
     assert tl.raw == []
 
 
-def test_export():
+def test_export(base_table_list):
     """When I have a table list
     It should have an export method
+    It should write names, count, group name and table name
     """
-    tl = TableList()
-    try:
-        tl.export()
-    except AttributeError:
-        assert False
+    tl = base_table_list
+    tl.export("tests/output.csv")
+    tl.read_csv("tests/output.csv")
+    assert tl.raw[0] == ["Steve and Eli", "2", "group 1", "table 1"]
 
 
 def test_csv():
