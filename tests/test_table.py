@@ -118,3 +118,11 @@ def test_table_name():
     assert tab.name == ""
     tab.set_name("table 1")
     assert tab.name == "table 1"
+
+
+def test_table_name_init():
+    """When I initialize with a name kwarg
+    It should set table name to that argument
+    """
+    tab = Table(name="table 1")
+    assert tab.name == "table 1"

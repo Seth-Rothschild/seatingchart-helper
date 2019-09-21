@@ -1,18 +1,16 @@
 class Group:
-    def __init__(self):
+    def __init__(self, name=""):
         self.count = 0
-        self.names = []
-        self.countlist = []
-        self.name = ""
+        self.people = []
+        self.name = name
 
     def add_people(self, people):
-        name, count = people
+        _, count = people
         self.count += count
-        self.names.append(name)
-        self.countlist.append(count)
+        self.people.append(people)
 
     def display(self):
-        for name in self.names:
+        for name, count in self.people:
             print(name)
 
     def set_name(self, name):

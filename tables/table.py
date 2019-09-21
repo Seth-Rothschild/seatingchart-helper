@@ -1,7 +1,7 @@
 class Table:
-    def __init__(self, capacity=12):
+    def __init__(self, name="", capacity=12):
         self.count = 0
-        self.name = ""
+        self.name = name
         self.groupslist = []
         self.capacity = capacity
         self._update_remaining()
