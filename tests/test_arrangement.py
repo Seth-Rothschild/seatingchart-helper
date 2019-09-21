@@ -166,3 +166,24 @@ def test_display(base_arrangement, capsys):
     assert "Steve and Eli" in captured.out
     assert "Unseated" in captured.out
     assert "None" not in captured.out
+
+
+def test_find_random_table():
+    """When I call find_random_table
+    It should return a table in tables
+    """
+    arr = Arrangement()
+    arr.create_table("Table 1")
+    arr.create_table("Table 2")
+    tab = arr._random_table()
+    assert tab.name in ["Table 1", "Table 2"]
+
+
+def test_assign_all_unseated(base_arrangement):
+    """When I assign unseated
+    It should clear the unseated list
+    """
+    arr = base_arrangement
+    arr.remove("group 1")
+    arr.seat_all()
+    assert arr.unseated == []

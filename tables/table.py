@@ -11,12 +11,16 @@ class Table:
             self.count += group.count
             self.groups.append(group)
             self._update_remaining()
+        else:
+            raise ValueError("Failed to add, table would be over capacity")
 
     def remove_group(self, group):
         if group in self.groups:
             self.groups.remove(group)
             self.count -= group.count
             self._update_remaining()
+        else:
+            raise ValueError("Failed to remove, group not found")
 
     def display(self):
         if self.name != "":

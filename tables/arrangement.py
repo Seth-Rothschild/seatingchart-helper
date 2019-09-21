@@ -1,6 +1,7 @@
 import csv
 from tables.table import Table
 from tables.group import Group
+import random
 
 
 class Arrangement:
@@ -53,9 +54,9 @@ class Arrangement:
     def remove(self, group_name):
         group, table = self._find_seated_group(group_name)
         self.unseated.append(group)
-        table.groups.remove(group)
+        table.remove_group(group)
 
-    def merge(self, group1: str, group2: str, rename=""):
+    def merge(self, group1, group2, rename=""):
         gr1 = self._find_unseated_group(group1)
         gr2 = self._find_unseated_group(group2)
         for people in gr1.people:
@@ -67,6 +68,7 @@ class Arrangement:
     def display(self):
         sep = 15 * "-"
         unseated_count = self._count_unseated()
+
         for table in self.tables:
             table.display()
         print(sep + "\nUnseated ({})\n".format(unseated_count) + sep)
@@ -75,6 +77,17 @@ class Arrangement:
 
     def create_table(self, table_name, capacity=12):
         self.tables.append(Table(name=table_name, capacity=capacity))
+
+    def seat_all(self, stop=1000):
+        count = 0
+        while len(self.unseated) > 0 and count < stop:
+            try:
+                count += 1
+                tab = self._random_table()
+                gp = random.choice(self.unseated)
+                self.add(gp.name, tab.name)
+            except ValueError:
+                count += 1
 
     def _assign_assigned(self):
         added_groups = []
@@ -124,6 +137,9 @@ class Arrangement:
 
         for name in table_names:
             self.tables.append(Table(name=name))
+
+    def _random_table(self):
+        return random.choice(self.tables)
 
 
 def filter_by_name(name, list_of_objects):

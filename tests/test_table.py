@@ -90,24 +90,25 @@ def test_num_remaining(base_group):
 
 def test_overflow():
     """When I try to add too many people to a table
-    It should fail silently
+    It should raise a ValueError
     """
     gr = Group()
     gr.add_people(("", 13))
     tab = Table()
-    tab.add_group(gr)
+    with pytest.raises(ValueError):
+        tab.add_group(gr)
     assert tab.count == 0
     assert len(tab.groups) == 0
 
 
 def test_invalid_remove(base_group):
     """When I try to remove a group not in the groups
-    It should fail silently
+    It should raise an exception
     """
     gr = base_group
     tab = Table()
-    tab.remove_group(gr)
-    assert tab.count == 0
+    with pytest.raises(ValueError):
+        tab.remove_group(gr)
 
 
 def test_table_name():
