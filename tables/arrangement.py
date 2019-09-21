@@ -21,7 +21,8 @@ class Arrangement:
                 for group in table.groups:
                     for people in group.people:
                         name, count = people
-                        writeCSV.writerow([name, count, group.name, table.name])
+                        row = [name, count, group.name, table.name]
+                        writeCSV.writerow(row)
             for group in self.unseated:
                 for people in group.people:
                     name, count = people
@@ -42,23 +43,14 @@ class Arrangement:
 
     def add(self, group_name, table_name):
         table = self._find_table(table_name)
-        groups_to_remove = []
-        for i, group in enumerate(self.unseated):
-            if group.name == group_name:
-                table.add_group(group)
-                groups_to_remove.append(group)
-        for group in groups_to_remove:
-            self.unseated.remove(group)
+        group = self._find_unseated_group(group_name)
+        table.add_group(group)
+        self.unseated.remove(group)
 
-    def remove(self, group_name, table_name):
-        table = self._find_table(table_name)
-        groups_to_remove = []
-        for group in table.groups:
-            if group.name == group_name:
-                self.unseated.append(group)
-                groups_to_remove.append(group)
-        for group in groups_to_remove:
-            table.groups.remove(group)
+    def remove(self, group_name):
+        group, table = self._find_seated_group(group_name)
+        self.unseated.append(group)
+        table.groups.remove(group)
 
     def display(self):
         sep = 10 * "-"
@@ -75,10 +67,16 @@ class Arrangement:
                 self.add(gname, tname)
 
     def _find_table(self, table_name):
-        return list(filter(lambda tab: tab.name == table_name, self.tables))[0]
+        return filter_by_name(table_name, self.tables)[0]
 
     def _find_unseated_group(self, group_name):
-        return list(filter(lambda grp: grp.name == group_name, self.unseated))[0]
+        return filter_by_name(group_name, self.unseated)[0]
+
+    def _find_seated_group(self, group_name):
+        for table in self.tables:
+            matching = filter_by_name(group_name, table.groups)
+            if len(matching) > 0:
+                return matching[0], table
 
     def _create_groups_from_raw(self):
         group_names = list(set([row[2] for row in self.raw]))
@@ -105,3 +103,7 @@ class Arrangement:
 
         for name in table_names:
             self.tables.append(Table(name=name))
+
+
+def filter_by_name(name, list_of_objects):
+    return list(filter(lambda ob: ob.name == name, list_of_objects))

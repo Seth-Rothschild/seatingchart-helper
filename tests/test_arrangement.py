@@ -98,7 +98,7 @@ def test_remove_group(base_arrangement):
     It should remove the group from that table and add to unseated
     """
     arr = base_arrangement
-    arr.remove("group 1", "table 1")
+    arr.remove("group 1")
     assert len(arr.tables[0].groups) == 0
     assert len(arr.unseated) == 2
 
