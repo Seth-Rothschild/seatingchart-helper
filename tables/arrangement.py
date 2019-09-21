@@ -5,17 +5,20 @@ from tables.group import Group
 
 class Arrangement:
     def __init__(self, csv_path=""):
+        self._clear_arr()
+        if csv_path != "":
+            self.read_csv(csv_path)
+
+    def _clear_arr(self):
         self.tables = []
         self.unseated = []
         self.raw = []
-        if csv_path != "":
-            self.read_csv(csv_path)
 
     def export(self, csv_path):
         with open(csv_path, mode="w") as csvfile:
             writeCSV = csv.writer(csvfile, delimiter=",")
             for table in self.tables:
-                for group in table.groupslist:
+                for group in table.groups:
                     for people in group.people:
                         name, count = people
                         writeCSV.writerow([name, count, group.name, table.name])
@@ -28,6 +31,7 @@ class Arrangement:
                         writeCSV.writerow([name, count, "", ""])
 
     def read_csv(self, csv_path):
+        self._clear_arr()
         with open(csv_path) as csvfile:
             readCSV = csv.reader(csvfile, delimiter=",")
             for row in readCSV:
@@ -49,17 +53,18 @@ class Arrangement:
     def remove(self, group_name, table_name):
         table = self._find_table(table_name)
         groups_to_remove = []
-        for group in table.groupslist:
+        for group in table.groups:
             if group.name == group_name:
                 self.unseated.append(group)
                 groups_to_remove.append(group)
         for group in groups_to_remove:
-            table.groupslist.remove(group)
+            table.groups.remove(group)
 
     def display(self):
+        sep = 10 * "-"
         for table in self.tables:
             table.display()
-        print("Unseated")
+        print(sep + "\nUnseated\n" + sep)
         for group in self.unseated:
             group.display()
 
@@ -74,10 +79,6 @@ class Arrangement:
 
     def _find_unseated_group(self, group_name):
         return list(filter(lambda grp: grp.name == group_name, self.unseated))[0]
-
-    def _create_default_tables(self):
-        self.tables = [Table(name="sweetheart", capacity=2)]
-        self.tables += [Table(name="table {}".format(i)) for i in range(1, 16)]
 
     def _create_groups_from_raw(self):
         group_names = list(set([row[2] for row in self.raw]))
@@ -101,5 +102,6 @@ class Arrangement:
         table_names = list(set([row[3] for row in self.raw]))
         if "" in table_names:
             table_names.remove("")
+
         for name in table_names:
             self.tables.append(Table(name=name))

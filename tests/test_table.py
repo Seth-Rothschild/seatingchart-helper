@@ -22,27 +22,27 @@ def base_table():
 def test_table_init():
     """When a table is initialized
     It should have a count of 0
-    It should have a groupslist of []
+    It should have a groups of []
     """
     assert Table().count == 0
-    assert Table().groupslist == []
+    assert Table().groups == []
 
 
 def test_add_group_to_table(base_group):
     """When I add a group to a table
-    It should add the group to groupslist
+    It should add the group to groups
     It should add the count of the group to count
     """
     gr = base_group
     tab1 = Table()
     tab1.add_group(gr)
     assert tab1.count == 2
-    assert tab1.groupslist[0] == gr
+    assert tab1.groups[0] == gr
 
 
 def test_remove_group_from_table(base_group):
     """When I remove a group from the table
-    It should remove the group from groupslist
+    It should remove the group from groups
     and it should decrement the count
     """
     gr = base_group
@@ -50,7 +50,7 @@ def test_remove_group_from_table(base_group):
     tab1.add_group(gr)
     tab1.remove_group(gr)
     assert tab1.count == 0
-    assert tab1.groupslist == []
+    assert tab1.groups == []
 
 
 def test_print_table(base_table, capsys):
@@ -97,11 +97,11 @@ def test_overflow():
     tab = Table()
     tab.add_group(gr)
     assert tab.count == 0
-    assert len(tab.groupslist) == 0
+    assert len(tab.groups) == 0
 
 
 def test_invalid_remove(base_group):
-    """When I try to remove a group not in the groupslist
+    """When I try to remove a group not in the groups
     It should fail silently
     """
     gr = base_group

@@ -63,35 +63,16 @@ def test_csv():
     It should add unseated groups to unseated
     It should add the seated groups to their table
     """
-    arr = Arrangement()
-    arr.read_csv("tests/test.csv")
+    arr = Arrangement(csv_path="tests/test.csv")
     assert arr.raw[0] == ["Steve and Eli", "2", "creep slayerz", ""]
+    assert arr.raw[1] == ["Seth and Xavier", "2", "group 1", "table 1"]
     names = [gr.name for gr in arr.unseated]
     assert "creep slayerz" in names
 
+    print([tab.name for tab in arr.tables])
     assert len(arr.tables) == 1
     assert arr.tables[0].name == "table 1"
-    assert arr.tables[0].groupslist[0].name == "group 1"
-
-
-def test_init_with_csv():
-    """When I run init with a csv
-    It should add the csv entries to raw
-    """
-    arr = Arrangement(csv_path="tests/test.csv")
-    assert arr.raw[1] == ["Seth and Xavier", "2", "group 1", "table 1"]
-
-
-def test_create_default_tables():
-    """When I create default tables
-    It should create 16 tables, the first of which has two people
-    """
-    arr = Arrangement()
-    arr._create_default_tables()
-    assert len(arr.tables) == 16
-    assert arr.tables[0].capacity == 2
-    assert arr.tables[1].name == "table 1"
-    assert arr.tables[15].name == "table 15"
+    assert arr.tables[0].groups[0].name == "group 1"
 
 
 def test_assign_group_by_name(base_arrangement):
@@ -100,7 +81,7 @@ def test_assign_group_by_name(base_arrangement):
     """
     arr = base_arrangement
     arr.add("group 2", "table 2")
-    assert len(arr.tables[1].groupslist) == 1
+    assert len(arr.tables[1].groups) == 1
     assert len(arr.unseated) == 0
 
 
@@ -118,7 +99,7 @@ def test_remove_group(base_arrangement):
     """
     arr = base_arrangement
     arr.remove("group 1", "table 1")
-    assert len(arr.tables[0].groupslist) == 0
+    assert len(arr.tables[0].groups) == 0
     assert len(arr.unseated) == 2
 
 

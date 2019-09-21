@@ -2,19 +2,19 @@ class Table:
     def __init__(self, name="", capacity=12):
         self.count = 0
         self.name = name
-        self.groupslist = []
+        self.groups = []
         self.capacity = capacity
         self._update_remaining()
 
     def add_group(self, group):
         if group.count <= self.remaining:
             self.count += group.count
-            self.groupslist.append(group)
+            self.groups.append(group)
             self._update_remaining()
 
     def remove_group(self, group):
-        if group in self.groupslist:
-            self.groupslist.remove(group)
+        if group in self.groups:
+            self.groups.remove(group)
             self.count -= group.count
             self._update_remaining()
 
@@ -24,7 +24,7 @@ class Table:
             print("-" * (len(tblname) + 2))
             print(tblname)
             print("-" * (len(tblname) + 2))
-        for group in self.groupslist:
+        for group in self.groups:
             print(group.display())
         print("")
 
