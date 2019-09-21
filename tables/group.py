@@ -12,7 +12,7 @@ class Group:
     def display(self):
         for name, count in self.people:
             if self.name != name:
-                print(name, self.name)
+                print("{} ({})".format(name, self.name))
             else:
                 print(name)
         print("")

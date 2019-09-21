@@ -42,10 +42,13 @@ class Arrangement:
         self._assign_assigned()
 
     def add(self, group_name, table_name):
-        table = self._find_table(table_name)
-        group = self._find_unseated_group(group_name)
-        table.add_group(group)
-        self.unseated.remove(group)
+        try:
+            table = self._find_table(table_name)
+            group = self._find_unseated_group(group_name)
+            table.add_group(group)
+            self.unseated.remove(group)
+        except IndexError:
+            print("Failed to add {} to {}".format(group_name, table_name))
 
     def remove(self, group_name):
         group, table = self._find_seated_group(group_name)
@@ -69,11 +72,16 @@ class Arrangement:
         for group in self.unseated:
             group.display()
 
+    def add_table(self, table_name, capacity=12):
+        self.tables.append(Table(name=name, capacity=capacity))
+
     def _assign_assigned(self):
+        added_groups = []
         for row in self.raw:
             _, _, gname, tname = row
-            if tname != "":
+            if tname != "" and gname not in added_groups:
                 self.add(gname, tname)
+                added_groups.append(gname)
 
     def _find_table(self, table_name):
         return filter_by_name(table_name, self.tables)[0]
