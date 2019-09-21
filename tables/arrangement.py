@@ -65,15 +65,16 @@ class Arrangement:
             gr2.set_name(rename)
 
     def display(self):
-        sep = 10 * "-"
+        sep = 15 * "-"
+        unseated_count = self._count_unseated()
         for table in self.tables:
             table.display()
-        print(sep + "\nUnseated\n" + sep)
+        print(sep + "\nUnseated ({})\n".format(unseated_count) + sep)
         for group in self.unseated:
             group.display()
 
-    def add_table(self, table_name, capacity=12):
-        self.tables.append(Table(name=name, capacity=capacity))
+    def create_table(self, table_name, capacity=12):
+        self.tables.append(Table(name=table_name, capacity=capacity))
 
     def _assign_assigned(self):
         added_groups = []
@@ -94,6 +95,9 @@ class Arrangement:
             matching = filter_by_name(group_name, table.groups)
             if len(matching) > 0:
                 return matching[0], table
+
+    def _count_unseated(self):
+        return sum([g.count for g in self.unseated])
 
     def _create_groups_from_raw(self):
         group_names = list(set([row[2] for row in self.raw]))

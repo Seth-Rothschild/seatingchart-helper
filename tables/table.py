@@ -25,7 +25,7 @@ class Table:
             print(tblname)
             print("-" * (len(tblname) + 2))
         for group in self.groups:
-            print(group.display())
+            group.display()
         print("")
 
     def _update_remaining(self):

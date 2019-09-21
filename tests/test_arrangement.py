@@ -158,9 +158,11 @@ def test_display(base_arrangement, capsys):
     """When I display an arrangement
     It should display table for each table
     It should display unassigned
+    It should not display the string None
     """
     base_arrangement.display()
     captured = capsys.readouterr()
     assert "table 1" in captured.out
     assert "Steve and Eli" in captured.out
     assert "Unseated" in captured.out
+    assert "None" not in captured.out
