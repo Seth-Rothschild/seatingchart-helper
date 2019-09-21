@@ -52,6 +52,15 @@ class Arrangement:
         self.unseated.append(group)
         table.groups.remove(group)
 
+    def merge(self, group1: str, group2: str, rename=""):
+        gr1 = self._find_unseated_group(group1)
+        gr2 = self._find_unseated_group(group2)
+        for people in gr1.people:
+            gr2.add_people(people)
+        self.unseated.remove(gr1)
+        if rename != "":
+            gr2.set_name(rename)
+
     def display(self):
         sep = 10 * "-"
         for table in self.tables:

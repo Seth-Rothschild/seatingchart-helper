@@ -103,6 +103,28 @@ def test_remove_group(base_arrangement):
     assert len(arr.unseated) == 2
 
 
+def test_merge_unseated_group():
+    """When I merge groups
+    It should merge the first group into the second
+    It should have an optional rename parameter
+    It should remove one group from unseated
+    """
+    arr = Arrangement()
+    arr.unseated = [Group(name="Group {}".format(i)) for i in range(3)]
+    arr.unseated[0].people = [("p1", 2)]
+    arr.unseated[2].people = [("p3", 1)]
+    arr.unseated[0].count = 2
+    arr.unseated[2].count = 1
+
+    arr.merge("Group 0", "Group 1")
+    assert len(arr.unseated) == 2
+    assert ("p1", 2) in arr.unseated[0].people
+
+    arr.merge("Group 1", "Group 2", rename="Group 0")
+    assert len(arr.unseated) == 1
+    assert arr.unseated[0].name == "Group 0"
+
+
 def test_create_groups_from_raw(arr_with_raw):
     """When I create groups from raw
     It should create groups for every name
