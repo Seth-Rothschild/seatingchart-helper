@@ -11,7 +11,11 @@ class Group:
 
     def display(self):
         for name, count in self.people:
-            print(name)
+            if self.name != name:
+                print(name, self.name)
+            else:
+                print(name)
+        print("")
 
     def set_name(self, name):
         self.name = name

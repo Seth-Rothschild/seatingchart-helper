@@ -20,10 +20,13 @@ class Table:
 
     def display(self):
         if self.name != "":
-            print(self.name)
+            tblname = "{} ({})".format(self.name, self.count)
+            print("-" * (len(tblname) + 2))
+            print(tblname)
+            print("-" * (len(tblname) + 2))
         for group in self.groupslist:
             print(group.display())
-        print("Table count: {}".format(self.count))
+        print("")
 
     def _update_remaining(self):
         self.remaining = self.capacity - self.count

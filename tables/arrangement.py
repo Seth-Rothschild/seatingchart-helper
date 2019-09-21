@@ -16,9 +16,16 @@ class Arrangement:
             writeCSV = csv.writer(csvfile, delimiter=",")
             for table in self.tables:
                 for group in table.groupslist:
-                    for i, people in enumerate(group.people):
+                    for people in group.people:
                         name, count = people
                         writeCSV.writerow([name, count, group.name, table.name])
+            for group in self.unseated:
+                for people in group.people:
+                    name, count = people
+                    if name != group.name:
+                        writeCSV.writerow([name, count, group.name, ""])
+                    else:
+                        writeCSV.writerow([name, count, "", ""])
 
     def read_csv(self, csv_path):
         with open(csv_path) as csvfile:

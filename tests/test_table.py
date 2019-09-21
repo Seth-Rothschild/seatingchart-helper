@@ -14,7 +14,7 @@ def base_group():
 def base_table():
     gr = Group()
     gr.add_people(("Steve and Eli", 2))
-    tab = Table()
+    tab = Table(name="Table 1")
     tab.add_group(gr)
     return tab
 
