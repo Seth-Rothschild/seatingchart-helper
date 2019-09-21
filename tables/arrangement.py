@@ -25,6 +25,9 @@ class Arrangement:
             readCSV = csv.reader(csvfile, delimiter=",")
             for row in readCSV:
                 self.raw.append(row)
+        self._create_groups_from_raw()
+        self._create_tables_from_raw()
+        self._assign_assigned()
 
     def add(self, group_name, table_name):
         table = self._find_table(table_name)
@@ -46,6 +49,19 @@ class Arrangement:
         for group in groups_to_remove:
             table.groupslist.remove(group)
 
+    def display(self):
+        for table in self.tables:
+            table.display()
+        print("Unseated")
+        for group in self.unseated:
+            group.display()
+
+    def _assign_assigned(self):
+        for row in self.raw:
+            _, _, gname, tname = row
+            if tname != "":
+                self.add(gname, tname)
+
     def _find_table(self, table_name):
         return list(filter(lambda tab: tab.name == table_name, self.tables))[0]
 
@@ -58,7 +74,8 @@ class Arrangement:
 
     def _create_groups_from_raw(self):
         group_names = list(set([row[2] for row in self.raw]))
-        group_names.remove("")
+        if "" in group_names:
+            group_names.remove("")
 
         for name in group_names:
             self.unseated.append(Group(name=name))
@@ -72,3 +89,10 @@ class Arrangement:
                 gr = Group(name=name)
                 gr.add_people(people)
                 self.unseated.append(gr)
+
+    def _create_tables_from_raw(self):
+        table_names = list(set([row[3] for row in self.raw]))
+        if "" in table_names:
+            table_names.remove("")
+        for name in table_names:
+            self.tables.append(Table(name=name))

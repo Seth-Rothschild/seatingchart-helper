@@ -6,6 +6,19 @@ import os
 
 
 @pytest.fixture
+def arr_with_raw():
+    arr = Arrangement()
+    arr.raw = [
+        ["p1", "1", "group 1", ""],
+        ["p2", "2", "group 2", ""],
+        ["p3", "3", "group 1", ""],
+        ["p4", "4", "", ""],
+        ["p5", "5", "group 5", "table 5"],
+    ]
+    return arr
+
+
+@pytest.fixture
 def base_arrangement():
     gr1 = Group(name="group 1")
     gr1.add_people(("Steve and Eli", 2))
@@ -47,10 +60,18 @@ def test_export(base_arrangement):
 def test_csv():
     """When I run the read_csv method
     It should add the csv entries to raw
+    It should add unseated groups to unseated
+    It should add the seated groups to their table
     """
     arr = Arrangement()
     arr.read_csv("tests/test.csv")
-    assert arr.raw[0] == ["Steve and Eli", "2"]
+    assert arr.raw[0] == ["Steve and Eli", "2", "creep slayerz", ""]
+    names = [gr.name for gr in arr.unseated]
+    assert "creep slayerz" in names
+
+    assert len(arr.tables) == 1
+    assert arr.tables[0].name == "table 1"
+    assert arr.tables[0].groupslist[0].name == "group 1"
 
 
 def test_init_with_csv():
@@ -58,7 +79,7 @@ def test_init_with_csv():
     It should add the csv entries to raw
     """
     arr = Arrangement(csv_path="tests/test.csv")
-    assert arr.raw[1] == ["Seth and Xavier", "2"]
+    assert arr.raw[1] == ["Seth and Xavier", "2", "group 1", "table 1"]
 
 
 def test_create_default_tables():
@@ -101,27 +122,42 @@ def test_remove_group(base_arrangement):
     assert len(arr.unseated) == 2
 
 
-def test_create_groups_from_raw():
+def test_create_groups_from_raw(arr_with_raw):
     """When I create groups from raw
     It should create groups for every name
     It should populate those groups with the names from raw
     It should make new groups from blank group names
     """
-    arr = Arrangement()
-    arr.raw = [
-        ["p1", "1", "group 1", ""],
-        ["p2", "2", "group 2", ""],
-        ["p3", "3", "group 1", ""],
-        ["p4", "4", "", ""],
-    ]
+    arr = arr_with_raw
     arr._create_groups_from_raw()
-    assert len(arr.unseated) == 3
+    assert len(arr.unseated) == 4
     for group in arr.unseated:
         if group.name == "group 1":
             assert ("p1", 1) in group.people
             assert ("p3", 3) in group.people
         elif group.name == "group 2":
             assert ("p2", 2) in group.people
-        else:
-            assert group.name == "p4"
+        elif group.name == "p4":
             assert ("p4", 4) in group.people
+
+
+def test_create_tables_from_raw(arr_with_raw):
+    """When I create tables from raw
+    It should generate tables of the names in raw
+    """
+    raw = arr_with_raw
+    raw._create_tables_from_raw()
+    assert len(raw.tables) == 1
+    assert raw.tables[0].name == "table 5"
+
+
+def test_display(base_arrangement, capsys):
+    """When I display an arrangement
+    It should display table for each table
+    It should display unassigned
+    """
+    base_arrangement.display()
+    captured = capsys.readouterr()
+    assert "table 1" in captured.out
+    assert "Steve and Eli" in captured.out
+    assert "Unseated" in captured.out

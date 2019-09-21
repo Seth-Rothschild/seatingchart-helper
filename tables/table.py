@@ -19,6 +19,8 @@ class Table:
             self._update_remaining()
 
     def display(self):
+        if self.name != "":
+            print(self.name)
         for group in self.groupslist:
             print(group.display())
         print("Table count: {}".format(self.count))
