@@ -1,10 +1,12 @@
 import csv
+from tables.table import Table
+from tables.group import Group
 
 
 class Arrangement:
     def __init__(self, csv_path=""):
         self.tables = []
-        self.groups = []
+        self.unseated = []
         self.raw = []
         if csv_path != "":
             self.read_csv(csv_path)
@@ -25,18 +27,48 @@ class Arrangement:
                 self.raw.append(row)
 
     def add(self, group_name, table_name):
-        table = list(filter(lambda tab: tab.name == table_name, self.tables))[0]
-        for i, group in enumerate(self.groups):
+        table = self._find_table(table_name)
+        groups_to_remove = []
+        for i, group in enumerate(self.unseated):
             if group.name == group_name:
                 table.add_group(group)
-                self.groups.pop(i)
+                groups_to_remove.append(group)
+        for group in groups_to_remove:
+            self.unseated.remove(group)
 
     def remove(self, group_name, table_name):
-        table = list(filter(lambda tab: tab.name == table_name, self.tables))[0]
+        table = self._find_table(table_name)
         groups_to_remove = []
         for group in table.groupslist:
             if group.name == group_name:
-                self.groups.append(group)
+                self.unseated.append(group)
                 groups_to_remove.append(group)
         for group in groups_to_remove:
             table.groupslist.remove(group)
+
+    def _find_table(self, table_name):
+        return list(filter(lambda tab: tab.name == table_name, self.tables))[0]
+
+    def _find_unseated_group(self, group_name):
+        return list(filter(lambda grp: grp.name == group_name, self.unseated))[0]
+
+    def _create_default_tables(self):
+        self.tables = [Table(name="sweetheart", capacity=2)]
+        self.tables += [Table(name="table {}".format(i)) for i in range(1, 16)]
+
+    def _create_groups_from_raw(self):
+        group_names = list(set([row[2] for row in self.raw]))
+        group_names.remove("")
+
+        for name in group_names:
+            self.unseated.append(Group(name=name))
+
+        for row in self.raw:
+            name, count, group_name, table_name = row
+            people = (name, int(count))
+            if group_name in group_names:
+                self._find_unseated_group(group_name).add_people(people)
+            else:
+                gr = Group(name=name)
+                gr.add_people(people)
+                self.unseated.append(gr)
