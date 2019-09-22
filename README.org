@@ -1,4 +1,31 @@
 * About
-This project is a helper package to arrange tables for a wedding. You can read in a guest list from CSV, create groups of guests and assign those guests to a table.
+This project is a helper package to arrange tables for a wedding. We recommend assigning guests to tables at random.
+
+If you don't want to do that, we provide functionality for reading from csv, exporting to csv and moving people to and from tables. Documentation can be found [[tests/test_arrangement.py][in the test file.]]
 
 To get started, clone this repository and run ~python -m pip install -e .~ to install it.
+
+* Use
+
+First, format your guest list in a CSV ~/path/to/guestlist.csv~ with 4 columns and no header
+
+#+BEGIN_SRC
+ | Mr. and Dr. Brown  | 2 | Group 1 |         |
+ | Mr. and Mrs. Smith | 2 | Group 2 | Table 1 |
+ | Mr. Wilson         | 1 | Group 1 |         |
+ | Ms. Williamson     | 3 |         |         |
+#+END_SRC
+
+In python your workflow is as follows
+
+#+BEGIN_SRC python
+from tables import Arrangement
+arr = Arrangement(csv_path='/path/to/guestlist')
+arr.display()
+#+END_SRC
+
+You can then run ~arr.seat_all()~ to randomly place your guests at existing tables. If you need more tables, you can run ~arr.create_table(table_name)~. The arrangement class also has ~add~, ~remove~ and ~merge~ methods for more fine-grained control.
+
+
+
+
